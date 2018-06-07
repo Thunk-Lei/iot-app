@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" href="../../css/api.css">
+    <link rel="stylesheet" href="../../script/slide/rangeslider.css">
+    <style>
+        /*body{ background-color: #f1f1f1; }  //设置白色背景*/
+
+        body {
+            background-image: url(../../image/deviceList.jpg);
+            background-size: cover;
+        }
+
+        // 设置列表和列表项的统一
+        body,
+        ul,
+        li {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        ul {
+            list-style: none;
+            background-color: white;
+            margin-top: 30px;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        ul li {
+            margin-left: 5%;
+            border-bottom: 1px solid #ddd;
+        }
+
+        ul li {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        ul li :last-child {
+            border-bottom: 0px;
+        }
+
+        ul li .ios7CBox:after {
+            width: 18px;
+            height: 18px;
+            top: 3px;
+        }
+
+        ul li .ios7CBox {
+            display: table-cell;
+            vertical-align: middle;
+            height: 24px;
+            width: 40px;
+        }
+
+        .gos_rightBlock {
+            float: right;
+            margin-right: 5%;
+        }
+
+        .gos_readonly {
+            color: darkGray;
+        }
+
+        .gos_slideCellBottom {
+            margin: 3px 0;
+        }
+
+        .gos_slideMin {
+            width: 12%;
+            text-align: center;
+            float: left;
+        }
+
+        .gos_slideDiv {
+            width: 73%;
+            float: left;
+            padding-top: 8px;
+            margin: 0;
+            position: relative;
+        }
+
+        .gos_slide {
+            display: block;
+            width: 130%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .gos_slideMax {
+            float: left;
+            width: 12%;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .gos_extendTitle {
+            display: inline-block;
+            height: 18px;
+            position: absolute;
+            width: 30%;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        .gos_extendLi {
+            position: relative;
+            padding: 10px 0px;
+        }
+
+        .gos_extend {
+            display: table-cell;
+            *display: inline-block;
+            overflow: hidden;
+            font-size: 14px;
+            line-height: 24px;
+            padding: 2px;
+            margin-left: 35%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            margin-right: 0px;
+            /*background-color: blue;*/
+            width: 60%;
+            height: 24px;
+        }
+
+        textarea {
+            outline: 0 none;
+            /*border-color: rgba(82, 168, 236, 0.8);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);*/
+            /*border-color: rgba(0, 0, 0, 1);*/
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 1), 0 0 1px rgba(0, 0, 0, 1);
+        }
+        /*温湿度仪表盘样式*/
+
+        div.TH {
+            width: 96%;
+            margin-left: 2%;
+            margin-right: 2%;
+            margin-top: 5%;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        p.title {
+            color: #eee;
+            padding-left: 3%;
+            padding-top: 3%;
+            font-size: 14px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        div#TH_gauge {
+            /*width: 96%;*/
+            margin-left: 2%;
+            margin-right: 2%;
+            height: 150px;
+            /*border-radius: 10px;*/
+        }
+
+        div.mp,
+        div.wr,
+        div.lx {
+            width: 96%;
+            margin-left: 2%;
+            margin-right: 2%;
+            margin-top: 5%;
+            border-radius: 10px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        /*#mp_data {
+        height: 150px;
+      }*/
+
+        #mp_data>p,
+        #wr_data>p,
+        #lx_data>p {
+            text-align: center;
+        }
+
+        #mp_data>p>span,
+        #wr_data>p>span,
+        #lx_data>p>span {
+            color: #eee;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 70px;
+        }
+
+        .Pressure {
+            margin-left: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 温湿度仪表盘展示 -->
+    <div class="TH">
+        <p class="title">实时温湿度</p>
+        <div id="TH_gauge"></div>
+    </div>
+
+    <!-- 海拔气压展示 -->
+    <div class="mp">
+        <p class="title">实时海拔气压</p>
+        <div id="mp_data">
+            <p>
+        <span>海拔：<span class="gos_Altitude"></span> m</span>
+        <span class="Pressure">气压：<span class="gos_Pressure"></span> KPa</span>
+      </p>
+        </div>
+    </div>
+
+    <!-- 风速雨量展示 -->
+    <div class="wr">
+        <p class="title">实时风速降雨量</p>
+        <div id="wr_data">
+            <p>
+                <span>风速：<span class="gos_Windspeed"></span> m/s</span>
+                <span class="Pressure">降雨量：<span class="gos_Rainfall"></span> mm</span>
+            </p>
+        </div>
+    </div>
+
+    <!-- 光照度展示 -->
+    <div class="lx">
+        <p class="title">实时光照度</p>
+        <div id="lx_data">
+            <p>
+                <span>光照度：<span class="gos_Lux"></span> Lx</span>
+            </p>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/jquery.js"></script>
+<script type="text/javascript" src="../../script/jquery.min.js"></script>
+<script type="text/javascript" src="../../script/base.js"></script>
+<script type="text/javascript" src="../../script/fastclick.js"></script>
+<script type="text/javascript" src="../../script/Base64.js"></script>
+<script type="text/javascript" src="../../script/slide/rangeslider.min.js"></script>
+<script type="text/javascript" src="../../script/echarts-all.js"></script>
+<script type="text/javascript">
+    var device, gizWifiDevice;
+
+    // 数据点枚举标识
+    var dataPoint = {
+        GosDeviceRead_Temperature: 0,
+        GosDeviceRead_Humidity: 1,
+        GosDeviceRead_Altitude: 2,
+        GosDeviceRead_Windspeed: 3,
+        GosDeviceRead_Rainfall: 4,
+        GosDeviceRead_Pressure: 5,
+        GosDeviceRead_Lux: 6,
+    }
+
+    // 数据点值
+    var Temperature = 0;
+    var Humidity = 0;
+    var Altitude = 0;
+    var Windspeed = 0;
+    var Rainfall = 0;
+    var Pressure = 0;
+    var Lux = 0;
+    var deviceName, alias;
+    var unSubscribe = false;
+
+    // 定时器
+    var timer;
+    var isController = false; //标识是否刚从设备列表进入控制界面，若是，且设备变为可控后，值需修改为true
+    var time = 0; //次数
+    var delay; //延时时间
+
+    apiready = function() {
+        api.addEventListener({
+            name: 'viewappear'
+        }, fnAppear);
+
+
+        device = api.pageParam.pageParam;
+        gizWifiDevice = api.require('gizWifiDevice');
+        api.showProgress({
+            animationType: 'zoom',
+            title: '正在更新',
+            modal: true
+        });
+        checkDeviceNetStatus(); //检测设备可控状态
+        setupTitle();
+        registerDeviceStatusNotification(); //注册设备状态变化监听
+    }
+
+    function fnAppear() {}
+
+    function updateUI() {
+        // updateNumberReadShow('gos_Temperature', Temperature);
+        // updateNumberReadShow('gos_Humidity', Humidity);
+        a = Rainfall - 30;
+        b = '';
+        if(a < 0){
+          b = 0
+        }else {
+          b = a
+        }
+        updateNumberReadShow('gos_Altitude', Altitude);
+        updateNumberReadShow('gos_Pressure', Pressure);
+        updateNumberReadShow('gos_Windspeed', Windspeed);
+        updateNumberReadShow('gos_Rainfall', b);
+        updateNumberReadShow('gos_Lux', Lux);
+    }
+
+    // ************************读写设备状态相关方法************************
+    function readData(ret) {
+        console.log("********************readData被调用**********************");
+        var data = ret.data;
+        console.log("data = " + JSON.stringify(data));
+        if (data && !$api.isEmptyObject(data)) {
+            console.log('读数据');
+            // 读数据
+            readDataPoint(dataPoint.GosDeviceRead_Temperature, data);
+            readDataPoint(dataPoint.GosDeviceRead_Humidity, data);
+            readDataPoint(dataPoint.GosDeviceRead_Altitude, data);
+            readDataPoint(dataPoint.GosDeviceRead_Windspeed, data);
+            readDataPoint(dataPoint.GosDeviceRead_Rainfall, data);
+            readDataPoint(dataPoint.GosDeviceRead_Pressure, data);
+            readDataPoint(dataPoint.GosDeviceRead_Lux, data);
+            updateUI();
+            updateEcharts(); //获取温湿度
+        }
+
+
+    }
+
+
+    // 读数据点数据
+    function readDataPoint(dp, data) {
+        console.log('读' + dp + "个数据点");
+        switch (dp) {
+            case dataPoint.GosDeviceRead_Temperature:
+                Temperature = data["Temperature"];
+                break;
+            case dataPoint.GosDeviceRead_Humidity:
+                Humidity = data["Humidity"];
+                break;
+            case dataPoint.GosDeviceRead_Altitude:
+                Altitude = data["Altitude"];
+                break;
+            case dataPoint.GosDeviceRead_Windspeed:
+                Windspeed = data["Windspeed"];
+                break;
+            case dataPoint.GosDeviceRead_Rainfall:
+                Rainfall = data["Rainfall"];
+                break;
+            case dataPoint.GosDeviceRead_Pressure:
+                Pressure = data["Pressure"];
+                break;
+            case dataPoint.GosDeviceRead_Lux:
+                Lux = data["Lux"];
+                break;
+        }
+    }
+
+    // 写数据点数据
+    function write(dp, value) {
+        var data;
+        switch (dp) {}
+
+        console.log("下发控制指令： data = " + JSON.stringify(data) + "device = " + JSON.stringify(device) + ", device.device = " + JSON.stringify(device.device));
+        gizWifiDevice.write({
+            device: device,
+            sn: 0,
+            data: data
+        }, function(ret, err) {
+            console.log('下发控制指令回调 ret = ' + JSON.stringify(ret) + ', err = ' + JSON.stringify(err));
+        });
+    }
+
+
+    //******************机智云SDK相关代码**********************
+    // 获取设备状态
+    function getDeviceStatus() {
+        gizWifiDevice.getDeviceStatus({
+            device: {
+                did: device.did,
+                mac: device.mac
+            }
+        }, function(ret, err) {
+            receive_fnGetDeviceStatus(ret, err);
+        });
+    }
+
+    // 获取设备状态回调
+    function receive_fnGetDeviceStatus(ret, err) {
+        console.log("获取设备状态回调 + ret = " + JSON.stringify(ret) + "err = " + JSON.stringify(err));
+
+        if (!err && isController == false) {
+            console.log("在获取设备状态中关闭定时器");
+            api.hideProgress();
+            isController = true;
+            window.clearInterval(timer);
+        }
+
+        if (ret) {
+            console.log("在获取设备状态中更改UI");
+            readData(ret);
+        }
+    }
+
+    // 注册设备状态变化监听
+    function registerDeviceStatusNotification() {
+        gizWifiDevice.registerNotifications({
+            device: {
+                did: device.did,
+                mac: device.mac
+            }
+        }, function(ret, err) {
+            receive_fnRegisterDeviceStatusNotification(ret, err);
+        });
+
+    }
+
+    // 设备主动上报状态回调
+    function receive_fnRegisterDeviceStatusNotification(ret, err) {
+        console.log("注册通知接口, 设备主动上报状态");
+        console.log("ret = " + JSON.stringify(ret) + ", err = " + JSON.stringify(err));
+        if (!err) {
+            var netStatus = JSON.stringify(ret.netStatus);
+            if (netStatus == 2 || netStatus == -1) {
+                if (isController == false) {
+                    console.log("通知 关闭定时器");
+                    api.hideProgress();
+                    window.clearInterval(timer);
+                    isController = true;
+                }
+                readData(ret);
+            } else {
+                api.hideProgress();
+                if (!unSubscribe) {
+                    api.alert({
+                        title: '提示',
+                        msg: '连接已断开',
+                    }, function(ret, err) {});
+                    api.closeWin();
+                    fnUnsubscribe();
+                    console.log("fnUnsubscribe()");
+                }
+            }
+        }
+    }
+
+    // 设置设备别名
+    function setDeviceAlais(alias) {
+        gizWifiDevice.setCustomInfo({
+            device: device,
+            alias: alias
+        }, function(ret, err) {
+            receive_fnSetCustomInfo(ret, err);
+        });
+    }
+
+    // 设置设备别名回调
+    function receive_fnSetCustomInfo(ret, err) {
+        api.hideProgress();
+
+        if (err) {
+
+            api.alert({
+                title: '提示',
+                msg: '设置失败',
+            }, function(ret, err) {});
+        } else {
+            deviceName = alias;
+            // 修改设备名称
+            api.alert({
+                title: '提示',
+                msg: '设置成功',
+            }, function(ret, err) {});
+        }
+    }
+
+    // 获取硬件信息
+    function getHardwareInfo() {
+        gizWifiDevice.getHardwareInfo({
+            device: {
+                did: device.did,
+                mac: device.mac
+            }
+        }, function(ret, err) {
+            receive_fnGetHardwareInfo(ret, err);
+        });
+    }
+
+    // 获取硬件信息回调
+    function receive_fnGetHardwareInfo(ret, err) {
+        var hardwareStr = "";
+        var wifiHardVer = ret.hardwareInfo.wifiHardVer;
+        var wifiSoftVer = ret.hardwareInfo.wifiSoftVer;
+        var mcuHardVer = ret.hardwareInfo.mcuHardVer;
+        var mcuSoftVer = ret.hardwareInfo.mcuSoftVer;
+        var firmwareId = ret.hardwareInfo.firmwareId;
+        var firmwareVer = ret.hardwareInfo.firmwareVer;
+        var productKey = ret.hardwareInfo.productKey;
+        var did = device.did;
+        var ip = device.ip;
+        var mac = device.mac;
+
+        hardwareStr += "WiFi Hardware Version: " + wifiHardVer + ",\n" +
+            "WiFi Software Version: " + wifiSoftVer + ",\n" +
+            "MCU Hardware Version: " + mcuHardVer + ",\n" +
+            "MCU Software Version: " + mcuSoftVer + ",\n" +
+            "Firmware Id: " + firmwareId + ",\n" +
+            "Firmware Version: " + firmwareVer + ",\n" +
+            "Product Key: " + productKey + ",\n" +
+            "Device ID: " + did + ",\n" +
+            "Device IP: " + ip + ",\n" +
+            "Device MAC: " + mac;
+
+        api.alert({
+            title: '设备硬件信息',
+            msg: hardwareStr,
+        }, function(ret, err) {});
+    }
+
+    // 解除设备订阅
+    function fnUnsubscribe() {
+        console.log('解除订阅');
+        var gizWifiDevice = api.require("gizWifiDevice");
+        gizWifiDevice.setSubscribe({
+            device: device,
+            subscribed: false
+        }, function(ret, err) {
+            if (!err) {
+                unSubscribe = true;
+            }
+            console.log('解除订阅结果: ret = ' + JSON.stringify(ret) + ', err = ' + err);
+        });
+    }
+
+    //******************菜单与标题部分的事件**********************
+    // 更多按钮单击事件
+    function moreBtnDidClick() {
+        console.log("点击了控制界面上方的更多按钮");
+        var lan = device.isLAN;
+
+        if (lan.toString() == "true") {
+            //局域网
+            console.log("走局域网通道, lan = " + lan);
+            api.actionSheet({
+                buttons: ['获取设备状态', '获取硬件信息', '设置设备信息']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+                switch (index) {
+                    case 1:
+                        console.log("获取设备状态");
+                        getDeviceStatus();
+                        break;
+                    case 2:
+                        console.log("获取硬件信息");
+                        getHardwareInfo();
+                        break;
+                    case 3:
+                        console.log("设置设备信息");
+                        setDevicAlaisPrompt();
+                        break;
+                }
+            });
+        } else {
+            console.log("走远程通道, lan = " + lan);
+            console.log("lan == false = " + lan == false);
+            api.actionSheet({
+                buttons: ['获取设备状态', '设置设备信息']
+            }, function(ret, err) {
+                var index = ret.buttonIndex;
+
+                switch (index) {
+                    case 1:
+                        console.log("获取设备状态");
+                        getDeviceStatus();
+                        break;
+                    case 2:
+                        console.log("设置设备信息");
+                        setDevicAlaisPrompt();
+                        break;
+                }
+            });
+        }
+    }
+
+    // 弹出设备别名弹框
+    function setDevicAlaisPrompt() {
+        var tip;
+        if (deviceName) {
+            tip = deviceName;
+        } else {
+            tip = "请输入设备名称";
+        }
+        console.log("设置设备别名");
+        api.prompt({
+            title: '设置设备别名',
+            text: tip,
+            buttons: ['取消', '确定']
+        }, function(ret, err) {
+            var index = ret.buttonIndex;
+            var text = ret.text;
+            if (index == 2) {
+                alias = text;
+                setDeviceAlais(text);
+                //显示加载圈
+                api.showProgress({
+                    animationType: 'zoom',
+                    title: '正在更新',
+                    modal: true
+                });
+            }
+        });
+    }
+
+    // 设置界面标题
+    function setupTitle() {
+        console.log("设置标题");
+        deviceName = device.productName;
+        if (device.alias) {
+            deviceName = device.alias;
+        }
+
+        var alias = deviceName;
+        if (alias.length > 10) {
+            alias = alias.substring(0, 10) + "...";
+        }
+        api.execScript({
+            name: 'win_deviceControl',
+            script: 'fnSetNavigationTitle({"name": ".controlTitle", "value": "' + alias + '"})'
+        });
+    }
+
+    // ************************检测设备可控状态相关方法************************
+    function checkDeviceNetStatus() {
+        // 启动检查网络状态的定时器
+        var isLAN = device.isLAN;
+        delay = isLAN == 1 ? 10000 : 30000;
+        timer = window.setInterval("run()", 1000);
+    }
+
+    // 定时器定时判断设备的可控状态
+    function run() {
+        time++;
+        if (time <= (delay / 1000)) {
+            // 每1秒获取一次设备状态
+            console.log("时间还未到预期时间");
+            getDeviceStatus();
+        } else {
+            // 超过延时时间还进入，表明设备还不可控，直接退出控制界面
+            api.hideProgress();
+            console.log("run 关闭定时器");
+            window.clearInterval(timer);
+            api.closeWin();
+            api.hideProgress();
+            fnUnsubscribe();
+            console.log("fnUnsubscribe()");
+        }
+    }
+
+    //******************以下内容皆是模板部分的代码**********************
+    // 根据给定的类名获取指定的dom元素
+    function getElByClsName(clsName) {
+        var doms = document.getElementsByClassName(clsName);
+        return doms[0];
+    }
+
+
+
+
+    //******************数据点为数值只读值的相关事件处理**********************
+    function updateNumberReadShow(clsName, value) {
+        var el = getElByClsName(clsName);
+        el.innerText = value;
+    }
+
+
+    //******************ECharts初始化*********************
+    var TH_gauge = echarts.init(document.getElementById('TH_gauge'), 'macarons');
+
+    // 显示加载动画
+    TH_gauge.showLoading({
+        text: '努力加载中...',
+    });
+
+    // 创建温湿度仪表盘、配置项
+    var TH_gauge_option = {
+        //  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        series: [
+            //温度仪表盘
+            {
+                type: 'gauge',
+                center: ['35%', '50%'], // 默认全局居中
+                radius: [0, '90%'],
+                startAngle: 320,
+                endAngle: 45,
+                min: -10, // 最小值
+                max: 50, // 最大值
+                splitNumber: 6, // 分割段数，默认为5
+                axisLine: { // 坐标轴线
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: [
+                            [0.33, 'lightgreen'],
+                            [0.66, '#18bc9a'],
+                            [0.83, '#FF9900'],
+                            [1, '#ff4500']
+                        ],
+                        width: 15
+                    }
+                },
+                axisTick: { // 坐标轴小标记
+                    show: true, // 属性show控制显示与否，默认不显示
+                    splitNumber: 5, // 每份split细分多少段
+                    length: 5, // 属性length控制线长
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: '#eee',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: { // 坐标轴文本标签，详见axis.axisLabel
+                    show: true,
+                    formatter: function(v) {
+                        switch (v + '') {
+                            case '10':
+                                return '防冻';
+                            case '30':
+                                return '舒适';
+                            case '40':
+                                return '高温';
+                            case '50':
+                                return '防暑';
+                            default:
+                                return '';
+                        }
+                    },
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color: '#eee'
+                    }
+                },
+                splitLine: { // 分隔线
+                    show: false, // 默认显示，属性show控制显示与否true/false
+                    length: 15, // 属性length控制线长
+                    lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: '#eee',
+                        width: 2,
+                        type: 'solid'
+                    }
+                },
+                pointer: { //指针样式
+                    length: '70%', //属性length控制线长，百分比相对的是仪表盘的外半径
+                    width: 8, //属性width控制指针最宽处
+                    color: 'auto' //属性color控制指针颜色
+                },
+                title: {
+                    show: true,
+                    offsetCenter: ['75%', -5], // x, y，单位px
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color: '#eee',
+                        fontSize: 12
+                    }
+                },
+                detail: {
+                    show: true,
+                    backgroundColor: 'rgba(0,0,0,0)',
+                    borderWidth: 0,
+                    //  borderColor: '#ccc',
+                    //  width: 100,
+                    //  height: 40,
+                    offsetCenter: ['75%', 0], // x, y，单位px
+                    formatter: '{value}℃',
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color: 'auto',
+                        fontSize: 15
+                    }
+                },
+                data: [{
+                    value: 50,
+                    name: '温度'
+                }]
+            },
+
+            //湿度仪表盘
+            {
+                type: 'gauge',
+                center: ['70%', '60%'], // 默认全局居中
+                radius: [0, '80%'],
+                startAngle: 140,
+                endAngle: -55,
+                min: 0, // 最小值
+                max: 100, // 最大值
+                splitNumber: 10, // 分割段数，默认为5
+                axisLine: { // 坐标轴线
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: [
+                            [0.2, 'lightgreen'],
+                            [0.6, '#18bc9a'],
+                            [1, '#ff4500']
+                        ],
+                        width: 10
+                    }
+                },
+                axisTick: { // 坐标轴小标记
+                    show: true, // 属性show控制显示与否，默认不显示
+                    splitNumber: 5, // 每份split细分多少段
+                    length: 5, // 属性length控制线长
+                    lineStyle: { // 属性lineStyle控制线条样式
+                        color: '#eee',
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                axisLabel: { // 坐标轴文本标签，详见axis.axisLabel
+                    show: true,
+                    formatter: function(v) {
+                        switch (v + '') {
+                            case '10':
+                                return '干燥';
+                            case '40':
+                                return '舒适';
+                            case '80':
+                                return '潮湿';
+                            default:
+                                return '';
+                        }
+                    },
+                    margin: 20,
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color: '#eee'
+                    }
+                },
+                splitLine: { // 分隔线
+                    show: false, // 默认显示，属性show控制显示与否true/false
+                    length: 15, // 属性length控制线长
+                    lineStyle: { // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: '#eee',
+                        width: 2,
+                        type: 'solid'
+                    }
+                },
+                pointer: { //指针样式
+                    length: '80%', //属性length控制线长，百分比相对的是仪表盘的外半径
+                    width: 8, //属性width控制指针最宽处
+                    color: 'auto' //属性color控制指针颜色
+                },
+                title: {
+                    show: true,
+                    offsetCenter: ['0%', 25], // x, y，单位px
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color: '#eee',
+                        fontSize: 12
+                    }
+                },
+                detail: {
+                    show: true,
+                    backgroundColor: 'rgba(0,0,0,0)',
+                    borderWidth: 0,
+                    //  borderColor: '#ccc',
+                    //  width: 100,
+                    //  height: 40,
+                    offsetCenter: ['0%', 30], // x, y，单位px
+                    formatter: '{value}%',
+                    textStyle: { // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                        color: 'auto',
+                        fontSize: 15
+                    }
+                },
+                data: [{
+                    value: 50,
+                    name: '湿度'
+                }]
+            },
+        ]
+    };
+
+    function updateEcharts() {
+        TH_gauge.hideLoading();
+        TH_gauge_option.series[0].data[0].value = Temperature;
+        TH_gauge_option.series[1].data[0].value = Humidity;
+        TH_gauge.setOption(TH_gauge_option, true)
+    };
+</script>
+
+</html>
